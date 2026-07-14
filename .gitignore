@@ -1,3 +1,13 @@
+# Reports, Presentations & Documentation (excluded from GitHub)
+*.pptx
+*.pdf
+extracted_images/
+generate_pptx.py
+build_merged_pptx.py
+read_ref_pptx.py
+add_more_data.py
+populate_db.py
+
 # Python
 *.pyc
 *.pyo
