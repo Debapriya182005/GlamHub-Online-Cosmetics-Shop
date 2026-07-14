@@ -1,0 +1,101 @@
+{% include 'header.html' %}
+{% load static %}
+
+<div class="bg-light py-4 mb-5">
+    <div class="container">
+        <h1 class="fw-bold mb-0">Our Collection</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'hmpage' %}" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active">Shop</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4">Categories</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="{% url 'shoppage' %}" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
+                                All Products
+                            </a>
+                        </li>
+                        {% for cat in allcate %}
+                        <li class="mb-2">
+                            <a href="{% url 'shopcatpage' cat.id %}" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
+                                {{ cat.cat_name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm rounded-4 d-none d-md-block">
+                <div class="card-body p-0 overflow-hidden rounded-4">
+                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=500" class="img-fluid" alt="Promo">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product Grid -->
+        <div class="col-md-9">
+            <div class="row g-4">
+                {% for item in allitem %}
+                <div class="col-md-4">
+                    <div class="card product-card h-100 position-relative">
+                        {% if item.is_bestseller %}
+                        <span class="glam-badge badge-bestseller">Bestseller</span>
+                        {% elif item.is_new %}
+                        <span class="glam-badge badge-new">New</span>
+                        {% elif item.is_pricedrop %}
+                        <span class="glam-badge badge-pricedrop">Price Drop</span>
+                        {% elif item.is_top_rated %}
+                        <span class="glam-badge badge-top-rated"><i class="fas fa-star me-1"></i>Top Rated</span>
+                        {% endif %}
+                        
+                        {% if item.is_gifted %}
+                        <span class="glam-badge badge-gifted">Most Gifted</span>
+                        {% endif %}
+                        {% if item.is_bogo %}
+                        <span class="glam-badge badge-bogo">BOGO</span>
+                        {% endif %}
+                        <div class="position-absolute top-0 end-0 p-2 z-3">
+                            <a href="{% url 'add_to_wishlist' item.id %}?next={{ request.path }}" class="btn btn-white btn-sm rounded-circle shadow-sm">
+                                <i class="far fa-heart text-danger"></i>
+                            </a>
+                        </div>
+                        <a href="{% url 'product_detail' item.id %}" class="text-decoration-none">
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" class="card-img-top product-img" alt="{{ item.name }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/300x300?text=Product" class="card-img-top product-img" alt="{{ item.name }}">
+                            {% endif %}
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-1"><a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">{{ item.name }}</a></h5>
+                            <p class="text-muted small mb-2">{{ item.category.cat_name }}</p>
+                            <p class="fw-bold fs-5 mb-3">₹{{ item.price }}</p>
+                            <a href="{% url 'addtocart' item.id %}" class="btn btn-ombre-glam w-100">Add to Bag</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h3>No products found</h3>
+                    <p class="text-muted">Try selecting a different category or check back later.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}

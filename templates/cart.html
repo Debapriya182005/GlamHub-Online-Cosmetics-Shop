@@ -1,0 +1,215 @@
+{% include 'header.html' %}
+{% load static %}
+
+<div class="bg-light py-4 mb-5">
+    <div class="container">
+        <h1 class="fw-bold mb-0">Your Shopping Bag</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'hmpage' %}" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active">Cart</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container my-5">
+    {% if cart_items %}
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th class="text-end pe-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center py-2">
+                                        <a href="{% url 'product_detail' item.product.id %}" class="text-decoration-none">
+                                            {% if item.product.image %}
+                                            <img src="{{ item.product.image.url }}" class="rounded-3 me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                            {% else %}
+                                            <img src="https://via.placeholder.com/60px" class="rounded-3 me-3">
+                                            {% endif %}
+                                        </a>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold"><a href="{% url 'product_detail' item.product.id %}" class="text-decoration-none text-dark">{{ item.product.name }}</a></h6>
+                                            <span class="text-muted small">{{ item.product.category.cat_name }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>₹{{ item.product.price }}</td>
+                                <td>
+                                    <form action="{% url 'update_cart' item.id %}" method="POST" class="d-flex align-items-center" style="max-width: 120px;">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm text-center">
+                                        <button type="submit" class="btn btn-sm btn-link text-primary"><i class="fas fa-sync-alt"></i></button>
+                                    </form>
+                                </td>
+                                <td class="fw-bold">₹{% widthratio item.product.price 1 item.quantity %}</td>
+                                <td class="text-end pe-4">
+                                    <form action="{% url 'delete_cart_item' item.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm text-danger border-0 bg-transparent"><i class="fas fa-trash-alt"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-4">Order Summary</h5>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Subtotal</span>
+                    <span class="fw-bold text-muted" style="text-decoration: line-through;">₹{{ original_total }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 text-success">
+                    <span>Summer Sale Discount (70%)</span>
+                    <span class="fw-bold">- ₹{{ discount_amount|floatformat:2 }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Shipping</span>
+                    <span class="text-success">Free</span>
+                </div>
+                <hr>
+                
+                <!-- Free Gift Logic (Based on Discounted Price) -->
+                <div class="mb-4">
+                    {% if total_price >= 2000 %}
+                    <div class="alert alert-success border-0 shadow-sm rounded-4 d-flex align-items-center py-3">
+                        <div class="fs-4 me-3">🎉</div>
+                        <div>
+                            <h6 class="alert-heading fw-bold mb-1">Free Gift Unlocked!</h6>
+                            <p class="small mb-0">A glamorous surprise gift will be added to your delivery.</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info border-0 shadow-sm rounded-4 d-flex align-items-center py-3" style="background-color: var(--glam-light-pink); color: var(--glam-pink);">
+                        <div class="fs-4 me-3">🎁</div>
+                        <div>
+                            <p class="small mb-0 fw-medium">Final total must be ₹2000+ for a <strong>FREE gift</strong>!</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="fs-5 fw-bold">Final Total</span>
+                    <span class="fs-5 fw-bold text-glam-pink" style="color: #ff4d6d;">₹{{ total_price }}</span>
+                </div>
+                
+                <form id="payment-form">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Delivery Address</label>
+                        <textarea name="address" id="address" class="form-control" rows="3" placeholder="Enter your full address" required></textarea>
+                    </div>
+                    <input type="hidden" name="amount" id="amount" value="{{ total_price }}">
+                    <button type="button" id="pay-button" onclick="window.startPayment()" class="btn btn-glam w-100 btn-lg py-3">Checkout with Razorpay</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-shopping-bag fa-4x text-muted opacity-25"></i>
+        </div>
+        <h3>Your bag is empty</h3>
+        <p class="text-muted mb-4">Looks like you haven't added any beauty essentials yet.</p>
+        <a href="{% url 'shoppage' %}" class="btn btn-glam btn-lg px-5">Start Shopping</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    window.startPayment = function() {
+        console.log("startPayment initiated");
+        const payButton = document.getElementById('pay-button');
+        const addressField = document.getElementById('address');
+        const amountField = document.getElementById('amount');
+        
+        if (!addressField.value) {
+            alert("Please enter a delivery address");
+            return;
+        }
+
+        if (typeof Razorpay === 'undefined') {
+            alert("Razorpay library not loaded. Check your internet or disable ad-blockers.");
+            return;
+        }
+
+        payButton.disabled = true;
+        payButton.innerHTML = 'Processing...';
+        
+        const params = new URLSearchParams();
+        params.append('amount', amountField.value);
+        params.append('address', addressField.value);
+
+        fetch("{% url 'initiate_payment' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: params
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Server error'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const options = {
+                "key": data.key,
+                "amount": data.amount,
+                "currency": data.currency,
+                "name": data.name,
+                "description": data.description,
+                "image": data.image,
+                "order_id": data.id,
+                "handler": function (response) {
+                    window.location.href = "{% url 'payment_success' %}";
+                },
+                "prefill": {
+                    "name": "{{ request.user.get_full_name|escapejs }}",
+                    "email": "{{ request.user.email|escapejs }}",
+                    "contact": "{{ request.user.mobile|escapejs }}"
+                },
+                "theme": {
+                    "color": "#ff4d6d"
+                },
+                "modal": {
+                    "ondismiss": function() {
+                        payButton.disabled = false;
+                        payButton.innerHTML = 'Checkout with Razorpay';
+                    }
+                }
+            };
+            const rzp = new Razorpay(options);
+            rzp.open();
+        })
+        .catch(error => {
+            alert("Error: " + error.message);
+            payButton.disabled = false;
+            payButton.innerHTML = 'Checkout with Razorpay';
+        });
+    };
+</script>
+
+{% include 'footer.html' %}

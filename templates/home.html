@@ -1,0 +1,720 @@
+{% include 'header.html' %}
+{% load static %}
+
+<!-- Side Radiance Effects -->
+<div class="side-radiance radiance-left">
+    <div class="radiance-bg"></div>
+    <div class="floating-container">
+        <!-- Left Side Elements -->
+        <span class="float-item bubble b-1"></span>
+        <span class="float-item heart h-1">❤</span>
+        <span class="float-item confetti c-1"></span>
+        <span class="float-item bubble b-2"></span>
+        <span class="float-item heart h-2">❤</span>
+        <span class="float-item confetti c-2"></span>
+        <span class="float-item bubble b-3"></span>
+    </div>
+</div>
+<div class="side-radiance radiance-right">
+    <div class="radiance-bg"></div>
+    <div class="floating-container">
+        <!-- Right Side Elements -->
+        <span class="float-item bubble b-4"></span>
+        <span class="float-item heart h-3">❤</span>
+        <span class="float-item confetti c-3"></span>
+        <span class="float-item bubble b-5"></span>
+        <span class="float-item heart h-4">❤</span>
+        <span class="float-item confetti c-4"></span>
+        <span class="float-item bubble b-6"></span>
+    </div>
+</div>
+
+<style>
+    /* Side Radiance Glows */
+    .side-radiance {
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        width: 35vw;
+        pointer-events: none;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+        overflow: hidden;
+    }
+    
+    .radiance-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.35;
+        filter: blur(120px);
+        z-index: -1;
+    }
+
+    .radiance-left .radiance-bg {
+        background: linear-gradient(to right, #ff8fa3 0%, rgba(255, 143, 163, 0.4) 40%, rgba(255, 143, 163, 0) 100%);
+    }
+
+    .radiance-right .radiance-bg {
+        background: linear-gradient(to left, #ff8fa3 0%, rgba(255, 143, 163, 0.4) 40%, rgba(255, 143, 163, 0) 100%);
+    }
+
+    .floating-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .float-item {
+        position: absolute;
+        display: block;
+        opacity: 0;
+        animation: float-rise var(--duration) infinite linear;
+        pointer-events: none;
+    }
+
+    .bubble {
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .heart {
+        color: #ff4d6d;
+        font-size: 1.5rem;
+        text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+    }
+
+    .confetti {
+        width: 10px;
+        height: 10px;
+        background: #ffb3c6;
+        transform: rotate(45deg);
+        box-shadow: 0 0 5px rgba(255, 179, 198, 0.5);
+    }
+
+    /* Animation */
+    @keyframes float-rise {
+        0% { transform: translateY(110vh) rotate(0deg) translateX(0); opacity: 0; }
+        10% { opacity: 0.8; }
+        90% { opacity: 0.8; }
+        100% { transform: translateY(-10vh) rotate(360deg) translateX(30px); opacity: 0; }
+    }
+
+    /* Individual Item Positioning and Timing */
+    .b-1 { width: 45px; height: 45px; left: 15%; --duration: 18s; animation-delay: 0s; }
+    .b-2 { width: 25px; height: 25px; left: 45%; --duration: 14s; animation-delay: -3s; }
+    .b-3 { width: 55px; height: 55px; left: 75%; --duration: 22s; animation-delay: -7s; }
+    .b-4 { width: 40px; height: 40px; right: 20%; --duration: 16s; animation-delay: -1.5s; }
+    .b-5 { width: 30px; height: 30px; right: 50%; --duration: 13s; animation-delay: -4.5s; }
+    .b-6 { width: 50px; height: 50px; right: 80%; --duration: 20s; animation-delay: -8s; }
+
+    .h-1 { left: 30%; --duration: 15s; animation-delay: -5s; }
+    .h-2 { left: 90%; --duration: 19s; animation-delay: -2s; }
+    .h-3 { right: 35%; --duration: 17s; animation-delay: -4s; }
+    .h-4 { right: 65%; --duration: 21s; animation-delay: -9s; }
+
+    .c-1 { left: 60%; --duration: 12s; animation-delay: -1s; }
+    .c-2 { left: 20%; --duration: 13s; animation-delay: -4s; }
+    .c-3 { right: 25%; --duration: 11s; animation-delay: -2s; }
+    .c-4 { right: 85%; --duration: 14s; animation-delay: -6s; }
+
+    .radiance-left {
+        left: -15vw;
+    }
+    .radiance-right {
+        right: -15vw;
+    }
+
+    @media (max-width: 768px) {
+        .side-radiance {
+            width: 50vw;
+        }
+        .radiance-bg {
+            opacity: 0.3;
+            filter: blur(60px);
+        }
+    }
+
+    /* Promotional Modal Styles */
+    #promoModal .modal-content {
+        background: linear-gradient(135deg, #ffccd5 0%, #ffb3c6 100%);
+        border: none;
+        border-radius: 30px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .promo-checkered-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background-image: 
+            linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%), 
+            linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%), 
+            linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.2) 75%), 
+            linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.2) 75%);
+        background-size: 40px 40px;
+        background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+        z-index: 0;
+        opacity: 0.5;
+    }
+
+    .promo-header-bubbly {
+        font-family: 'Dancing Script', cursive;
+        font-size: 3.5rem;
+        color: white;
+        text-shadow: 
+            3px 3px 0px var(--glam-pink), 
+            6px 6px 10px rgba(255, 77, 109, 0.4);
+        transform: rotate(-3deg);
+        z-index: 1;
+        position: relative;
+    }
+
+    .promo-badge-circle {
+        background: white;
+        color: var(--glam-pink);
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 2;
+        border: 4px solid var(--glam-pink);
+        transform: rotate(15deg);
+    }
+
+    .liquid-heart-card {
+        background: white;
+        padding: 30px;
+        border-radius: 25px;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        border: 8px solid transparent;
+        /* Simulated Liquid Heart Border */
+        background-clip: padding-box;
+        border: 10px solid #ff4d6d;
+        border-image: radial-gradient(circle at center, #ff4d6d 0%, #ff8fa3 100%) 1;
+        box-shadow: inset 0 0 15px rgba(255, 77, 109, 0.5), 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .liquid-heart-card::before {
+        content: '';
+        position: absolute;
+        top: -15px; left: -15px; right: -15px; bottom: -15px;
+        border: 2px solid #ffb3c6;
+        border-radius: 35px;
+        pointer-events: none;
+    }
+
+    .coupon-code-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--glam-pink);
+        letter-spacing: 2px;
+        border: 2px dashed #ffb3c6;
+        padding: 10px 20px;
+        display: inline-block;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    .countdown-container {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 25px;
+        z-index: 1;
+        position: relative;
+    }
+
+    .timer-unit {
+        background: white;
+        width: 70px;
+        padding: 10px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .timer-value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--glam-pink);
+        display: block;
+    }
+
+    .timer-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: #888;
+        font-weight: 600;
+    }
+
+    .floating-deco {
+        position: absolute;
+        z-index: 0;
+        pointer-events: none;
+        filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+    }
+
+    .bubble-1 { top: 10%; left: 5%; font-size: 2rem; animation: float 6s infinite ease-in-out; }
+    .bubble-2 { bottom: 20%; right: 5%; font-size: 3rem; animation: float 8s infinite ease-in-out reverse; }
+    .flower-1 { top: 40%; right: 10%; font-size: 2.5rem; animation: float 7s infinite ease-in-out 1s; }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .hero-section {
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(143, 65, 65, 0.334)), url('https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 70vh;
+        display: flex;
+        align-items: center;
+        color: white;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+    }
+    .cat-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        transition: all 0.3s;
+        border: 4px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .cat-item:hover .cat-circle {
+        transform: scale(1.1);
+        border-color: #ff4d6d;
+    }
+    .category-link {
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        display: block;
+        margin-top: 10px;
+    }
+    .product-card {
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    .product-card:hover {
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        transform: translateY(-10px);
+    }
+    .product-img-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+    .product-img {
+        height: 280px;
+        object-fit: cover;
+        transition: transform 0.5s;
+    }
+    .product-card:hover .product-img {
+        transform: scale(1.1);
+    }
+    .section-title {
+        position: relative;
+        padding-bottom: 15px;
+        margin-bottom: 40px;
+    }
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background-color: #ff4d6d;
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="container mt-2">
+    <div class="alert alert-info py-2 small">
+        <i class="fas fa-info-circle me-2"></i> Store Status: {{ featured_items|length }} Latest Items, {{ bestsellers|length }} Bestsellers available.
+    </div>
+</div>
+<div class="hero-section mb-5" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(143, 65, 65, 0.334)), url('https://img.freepik.com/premium-photo/beauty-product-poster_1198941-13011.jpg'); background-size: cover; background-position: center;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-start">
+                <h1 class="display-3 fw-bold mb-4">Timeless Beauty, <br><span style="color: #ff4d6d;">Naturally You.</span></h1>
+                <p class="lead mb-5 opacity-90">Discover our curated collection of organic cosmetics that celebrate your unique glow.</p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+                    <a href="{% url 'shoppage' %}" class="btn btn-glam btn-lg px-5 py-3 rounded-pill">Shop Now</a>
+                    <a href="{% url 'abtpage' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">Our Story</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Icons Section -->
+<div class="container my-5 py-4">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold section-title">Shop by Category</h2>
+    </div>
+    <div class="row g-4 justify-content-center">
+        {% for cat in categories %}
+        <div class="col-6 col-md-4 col-lg-2 text-center cat-item">
+            <a href="{% url 'shopcatpage' cat.id %}" class="text-decoration-none">
+                {% if cat.image %}
+                <img src="{{ cat.image.url }}" class="cat-circle mb-2" alt="{{ cat.cat_name }}">
+                {% else %}
+                <img src="{{ cat.placeholder_image }}" class="cat-circle mb-2" alt="{{ cat.cat_name }}">
+                {% endif %}
+                <span class="category-link">{{ cat.cat_name }}</span>
+            </a>
+        </div>
+        {% endfor %}
+        <div class="col-12 text-center mt-4">
+            <a href="{% url 'shoppage' %}" class="btn btn-link text-glam-pink fw-bold text-decoration-none">View All Categories <i class="fas fa-arrow-right ms-2"></i></a>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Products Section -->
+<div class="bg-light py-5">
+    <div class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold section-title">Latest Arrivals</h2>
+            <p class="text-muted">Freshly picked beauty essentials just for you (Showing {{ featured_items|length }} items)</p>
+        </div>
+        <div class="row g-4">
+            {% for item in featured_items %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card product-card h-100 border border-secondary-subtle">
+                    <div class="product-img-wrapper">
+                        {% if item.is_bestseller %}
+                        <span class="glam-badge badge-bestseller">Bestseller</span>
+                    {% if item.is_bogo %}
+                    <span class="glam-badge badge-bogo">BOGO</span>
+                    {% endif %}
+                        {% elif item.is_new %}
+                        <span class="glam-badge badge-new">New</span>
+                    {% if item.is_bogo %}
+                    <span class="glam-badge badge-bogo">BOGO</span>
+                    {% endif %}
+                        {% elif item.is_pricedrop %}
+                        <span class="glam-badge badge-pricedrop">Price Drop</span>
+                        {% elif item.is_top_rated %}
+                        <span class="glam-badge badge-top-rated"><i class="fas fa-star me-1"></i>Top Rated</span>
+                        {% if item.is_bogo %}
+                        <span class="glam-badge badge-bogo">BOGO</span>
+                        {% endif %}
+                        {% endif %}
+                        
+                        {% if item.is_gifted %}
+                        <span class="glam-badge badge-gifted">Most Gifted</span>
+                        {% endif %}
+                        {% if item.is_bogo %}
+                        <span class="glam-badge badge-bogo">BOGO</span>
+                        {% endif %}
+                        <a href="{% url 'product_detail' item.id %}">
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" class="card-img-top product-img" alt="{{ item.name }}" onerror="this.src='https://via.placeholder.com/300x400?text=Image+Not+Found'">
+                            {% else %}
+                            <img src="https://via.placeholder.com/300x400?text={{ item.name|urlencode }}" class="card-img-top product-img" alt="{{ item.name }}">
+                            {% endif %}
+                        </a>
+                        <div class="position-absolute top-0 end-0 p-3">
+                            <a href="{% url 'add_to_wishlist' item.id %}?next={{ request.path }}" class="btn btn-white btn-sm rounded-circle shadow-sm"><i class="far fa-heart text-danger"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <p class="text-uppercase small text-muted mb-1">{{ item.category.cat_name }}</p>
+                        <h5 class="card-title fw-bold mb-2">
+                            <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">{{ item.name }}</a>
+                        </h5>
+                        <p class="fw-bold fs-5 text-glam-pink mb-3" style="color: #ff4d6d;">₹{{ item.price }}</p>
+                        <a href="{% url 'addtocart' item.id %}" class="btn btn-ombre-glam w-100 rounded-pill">Add to Bag</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">No products found. Stay tuned for our new launch!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Bestsellers Section -->
+<div class="container my-5 py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold section-title">Our Bestsellers</h2>
+        <p class="text-muted">Most loved by our glam community</p>
+    </div>
+    <div class="row g-4">
+        {% for item in bestsellers %}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card product-card h-100">
+                <div class="product-img-wrapper">
+                    <span class="glam-badge badge-bestseller">Bestseller</span>
+                    {% if item.is_bogo %}
+                    <span class="glam-badge badge-bogo">BOGO</span>
+                    {% endif %}
+                    <a href="{% url 'product_detail' item.id %}">
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}" class="card-img-top product-img" alt="{{ item.name }}">
+                        {% else %}
+                        <img src="https://via.placeholder.com/300x400?text={{ item.name|urlencode }}" class="card-img-top product-img" alt="{{ item.name }}">
+                        {% endif %}
+                    </a>
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <a href="{% url 'add_to_wishlist' item.id %}?next={{ request.path }}" class="btn btn-white btn-sm rounded-circle shadow-sm"><i class="far fa-heart text-danger"></i></a>
+                    </div>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="text-uppercase small text-muted mb-1">{{ item.category.cat_name }}</p>
+                    <h5 class="card-title fw-bold mb-2">
+                        <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">{{ item.name }}</a>
+                    </h5>
+                    <p class="fw-bold fs-5 text-glam-pink mb-3" style="color: #ff4d6d;">₹{{ item.price }}</p>
+                    <a href="{% url 'addtocart' item.id %}" class="btn btn-ombre-glam w-100 rounded-pill">Add to Bag</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Top Rated Picks Section -->
+<div class="bg-light py-5">
+    <div class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold section-title">Top Rated Picks</h2>
+            <p class="text-muted">Highly recommended beauty essentials</p>
+        </div>
+        <div class="row g-4">
+            {% for item in top_rated %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card product-card h-100">
+                    <div class="product-img-wrapper">
+                        <span class="glam-badge badge-top-rated"><i class="fas fa-star me-1"></i>Top Rated</span>
+                        {% if item.is_bogo %}
+                        <span class="glam-badge badge-bogo">BOGO</span>
+                        {% endif %}
+                        <a href="{% url 'product_detail' item.id %}">
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" class="card-img-top product-img" alt="{{ item.name }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/300x400?text={{ item.name|urlencode }}" class="card-img-top product-img" alt="{{ item.name }}">
+                            {% endif %}
+                        </a>
+                        <div class="position-absolute top-0 end-0 p-3">
+                            <a href="{% url 'add_to_wishlist' item.id %}?next={{ request.path }}" class="btn btn-white btn-sm rounded-circle shadow-sm"><i class="far fa-heart text-danger"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <p class="text-uppercase small text-muted mb-1">{{ item.category.cat_name }}</p>
+                        <h5 class="card-title fw-bold mb-2">
+                            <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">{{ item.name }}</a>
+                        </h5>
+                        <p class="fw-bold fs-5 text-glam-pink mb-3" style="color: #ff4d6d;">₹{{ item.price }}</p>
+                        <a href="{% url 'addtocart' item.id %}" class="btn btn-ombre-glam w-100 rounded-pill">Add to Bag</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- New at GlamHub Section -->
+<div class="container my-5 py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold section-title">New at GlamHub</h2>
+        <p class="text-muted">Discover our latest beauty innovations</p>
+    </div>
+    <div class="row g-4">
+        {% for item in new_arrivals %}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card product-card h-100">
+                <div class="product-img-wrapper">
+                    <span class="glam-badge badge-new">New</span>
+                    {% if item.is_bogo %}
+                    <span class="glam-badge badge-bogo">BOGO</span>
+                    {% endif %}
+                    <a href="{% url 'product_detail' item.id %}">
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}" class="card-img-top product-img" alt="{{ item.name }}">
+                        {% else %}
+                        <img src="https://via.placeholder.com/300x400?text={{ item.name|urlencode }}" class="card-img-top product-img" alt="{{ item.name }}">
+                        {% endif %}
+                    </a>
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <a href="{% url 'add_to_wishlist' item.id %}?next={{ request.path }}" class="btn btn-white btn-sm rounded-circle shadow-sm"><i class="far fa-heart text-danger"></i></a>
+                    </div>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="text-uppercase small text-muted mb-1">{{ item.category.cat_name }}</p>
+                    <h5 class="card-title fw-bold mb-2">
+                        <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">{{ item.name }}</a>
+                    </h5>
+                    <p class="fw-bold fs-5 text-glam-pink mb-3" style="color: #ff4d6d;">₹{{ item.price }}</p>
+                    <a href="{% url 'addtocart' item.id %}" class="btn btn-ombre-glam w-100 rounded-pill">Add to Bag</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-5">
+        <a href="{% url 'shoppage' %}" class="btn btn-glam btn-lg px-5 rounded-pill shadow-sm">Explore All Products</a>
+    </div>
+</div>
+
+<!-- Promo Section -->
+<div class="container my-5 py-5">
+    <div class="row align-items-center bg-dark text-white rounded-5 overflow-hidden g-0 shadow-lg">
+        <div class="col-md-6 p-5">
+            <div class="mb-4">
+                <div class="navbar-brand fs-1 mb-0" style="background: linear-gradient(45deg, #ff4d6d, #ffccd5, #ff4d6d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: glam-shine 4s linear infinite;">
+                    Glam<span class="logo-accent" style="-webkit-text-fill-color: white;">Hub</span>
+                </div>
+                <div style="height: 2px; width: 50px; background-color: var(--glam-pink);"></div>
+            </div>
+            <h2 class="display-5 fw-bold mb-4">Join the Glam Club</h2>
+            <p class="lead mb-4 opacity-75">Subscribe to our newsletter and get 15% off your first purchase, plus exclusive access to new launches.</p>
+            <form action="#" method="POST" onsubmit="event.preventDefault(); showPinkBurst('Subscribed!', 'You are now part of the Glam Club.')">
+                {% csrf_token %}
+                <div class="input-group mb-3" style="max-width: 400px;">
+                    <input type="email" class="form-control rounded-start-pill bg-transparent text-white border-secondary" placeholder="Enter your email" required style="box-shadow: none;">
+                    <button class="btn btn-glam rounded-end-pill px-4" type="submit">Subscribe</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6 d-none d-md-block" style="position: relative;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to right, #212529, transparent); z-index: 1;"></div>
+            <img src="https://images.unsplash.com/photo-1522338223662-42664741344c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="img-fluid" alt="Glam Club" style="object-fit: cover; height: 100%;">
+        </div>
+    </div>
+</div>
+
+<!-- Promotional Sale Modal -->
+<div class="modal fade" id="promoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            
+            <div class="promo-badge-circle">
+                <span class="small mb-0" style="font-size: 0.7rem;">UP TO</span>
+                <span class="fs-3 mb-0">70%</span>
+                <span class="small mt-0" style="font-size: 0.7rem;">OFF</span>
+            </div>
+
+            <span class="floating-deco bubble-1">🫧</span>
+            <span class="floating-deco bubble-2">🫧</span>
+            <span class="floating-deco flower-1">🌸</span>
+
+            <div class="py-4">
+                <h2 class="promo-header-bubbly mb-4">Pink Summer Sale</h2>
+                
+                <div class="liquid-heart-card mx-auto" style="max-width: 350px;">
+                    <p class="mb-1 fw-bold text-muted small">LIMITED TIME OFFER</p>
+                    <h4 class="fw-bold mb-1">Get ₹500 OFF</h4>
+                    <p class="mb-2 small">on your first purchase</p>
+                    <div class="coupon-code-text">PINKSALE500</div>
+                </div>
+
+                <div class="countdown-container">
+                    <div class="timer-unit">
+                        <span class="timer-value" id="timer-h">02</span>
+                        <span class="timer-label">Hrs</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="timer-value" id="timer-m">44</span>
+                        <span class="timer-label">Mins</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="timer-value" id="timer-s">35</span>
+                        <span class="timer-label">Secs</span>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <button class="btn btn-glam btn-lg w-100 rounded-pill py-3 shadow fw-bold" data-bs-dismiss="modal">Get Shopping</button>
+                </div>
+            </div>
+
+            <div class="promo-checkered-overlay"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-show modal after 2 seconds
+        setTimeout(function() {
+            var promoModalElement = document.getElementById('promoModal');
+            if (promoModalElement) {
+                var promoModal = new bootstrap.Modal(promoModalElement);
+                promoModal.show();
+            }
+        }, 2000);
+
+        // Countdown Timer Logic
+        // Setting a dummy countdown for 2h 44m 35s from now for demonstration
+        var countDate = new Date().getTime() + (2 * 60 * 60 * 1000) + (44 * 60 * 1000) + (35 * 1000);
+
+        function updateTimer() {
+            var now = new Date().getTime();
+            var gap = countDate - now;
+
+            var second = 1000;
+            var minute = second * 60;
+            var hour = minute * 60;
+
+            var h = Math.floor((gap % (hour * 24)) / hour);
+            var m = Math.floor((gap % hour) / minute);
+            var s = Math.floor((gap % minute) / second);
+
+            var hElement = document.getElementById('timer-h');
+            var mElement = document.getElementById('timer-m');
+            var sElement = document.getElementById('timer-s');
+
+            if (hElement) hElement.innerText = h < 10 ? '0' + h : h;
+            if (mElement) mElement.innerText = m < 10 ? '0' + m : m;
+            if (sElement) sElement.innerText = s < 10 ? '0' + s : s;
+
+            if (gap < 0) {
+                clearInterval(timerInterval);
+                if (hElement) hElement.innerText = '00';
+                if (mElement) mElement.innerText = '00';
+                if (sElement) sElement.innerText = '00';
+            }
+        }
+
+        var timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+    });
+</script>
+
+{% include 'footer.html' %}

@@ -1,0 +1,396 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlamHub - Premium Cosmetics</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --glam-pink: #ff4d6d;
+            --glam-light-pink: #fff0f3;
+            --glam-gold: #d4af37;
+            --glam-dark: #2b2d42;
+        }
+        .designer-font {
+            font-family: 'Dancing Script', cursive;
+        }
+        .sale-announcement {
+            background: linear-gradient(90deg, #ff4d6d, #ffb3c6, #ff4d6d);
+            background-size: 200% auto;
+            color: white;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 1.1rem;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        .coupon-badge {
+            background-color: white;
+            color: var(--glam-pink);
+            padding: 2px 10px;
+            border-radius: 5px;
+            font-weight: 700;
+            margin-left: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--glam-dark);
+        }
+        h1, h2, h3, .navbar-brand {
+            font-family: 'Playfair Display', serif;
+        }
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            font-size: 2.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(
+                120deg, 
+                #ff4d6d 25%, 
+                #ff8fa3 45%, 
+                #ffffff 50%, 
+                #ff8fa3 55%, 
+                #ff4d6d 75%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glam-shine 3s linear infinite;
+            filter: drop-shadow(0 0 12px rgba(255, 77, 109, 0.6));
+            transition: all 0.3s ease;
+        }
+        @keyframes glam-shine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(255, 77, 109, 0.8));
+        }
+        .logo-accent {
+            font-family: 'Dancing Script', cursive;
+            margin-left: 2px;
+            font-size: 3.2rem;
+            -webkit-text-fill-color: var(--glam-dark);
+            filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.3));
+        }
+        .nav-link {
+            font-weight: 500;
+            color: var(--glam-dark);
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: var(--glam-pink);
+        }
+        .btn-glam {
+            background-color: var(--glam-pink);
+            color: white;
+            border-radius: 50px;
+            padding: 8px 25px;
+            border: none;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .btn-glam:hover {
+            background-color: #ff1a4a;
+            transform: translateY(-2px);
+            color: white;
+        }
+        .btn-outline-glam {
+            border: 2px solid var(--glam-pink);
+            color: var(--glam-pink);
+            border-radius: 50px;
+            padding: 6px 20px;
+            transition: all 0.3s;
+        }
+        .btn-outline-glam:hover {
+            background-color: var(--glam-pink);
+            color: white;
+        }
+        .top-bar {
+            background-color: var(--glam-dark);
+            color: white;
+            padding: 5px 0;
+            font-size: 0.85rem;
+        }
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        /* Custom SweetAlert Pink Style */
+        .glam-swal-popup {
+            border-radius: 20px !important;
+            padding: 2rem !important;
+        }
+        .glam-swal-title {
+            color: var(--glam-pink) !important;
+            font-family: 'Playfair Display', serif !important;
+            font-weight: 700 !important;
+        }
+        .glam-swal-confirm {
+            background-color: var(--glam-pink) !important;
+            border-radius: 50px !important;
+            padding: 10px 30px !important;
+        }
+
+        /* Product Badges Styles */
+        .glam-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .badge-pricedrop {
+            background: linear-gradient(45deg, #ff4d4d, #ff8c66);
+        }
+        .badge-bestseller {
+            background: linear-gradient(45deg, #ff4d6d, #ffb3c6);
+        }
+        .badge-gifted {
+            background: linear-gradient(45deg, #7b2cbf, #9d4edd);
+        }
+        .badge-new {
+            background: linear-gradient(45deg, #00b4d8, #90e0ef);
+        }
+        .badge-top-rated {
+            background: linear-gradient(45deg, #ff9f1c, #ffbf69);
+            color: #2b2d42;
+        }
+        .badge-bogo {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            color: white;
+            animation: pulse-bogo 2s infinite;
+        }
+        @keyframes pulse-bogo {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(79, 172, 254, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(79, 172, 254, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(79, 172, 254, 0); }
+        }
+
+        /* Pink Ombre Action Buttons */
+        .btn-ombre-glam {
+            background: linear-gradient(to right, #ff4d6d, #ff8fa3, #ffb3c6);
+            background-size: 200% auto;
+            color: white !important;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+        }
+        .btn-ombre-glam:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="sale-announcement">
+        🌸 <span class="designer-font" style="font-size: 1.4rem;">Pink Summer Sale</span>: 70% OFF! 
+        Use New Join Coupon: <span class="coupon-badge">GLAM70</span> 🌸
+    </div>
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between">
+            <div>
+                <i class="fas fa-phone me-2"></i> +1 800 GLAMHUB
+                <span class="ms-3"><i class="fas fa-envelope me-2"></i> support@glamhub.com</span>
+            </div>
+            <div>
+                <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'hmpage' %}">
+                Glam<span class="logo-accent">Hub</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'hmpage' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'shoppage' %}">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'abtpage' %}">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'cntctpage' %}">Contact</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <!-- Search Form -->
+                    <form action="{% url 'search' %}" method="GET" class="me-3 d-none d-lg-flex">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control form-control-sm rounded-pill-start border-glam" placeholder="Search products..." style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                            <button class="btn btn-glam btn-sm rounded-pill-end" type="submit" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Mobile Search Icon -->
+                    <a href="#" class="nav-link d-lg-none me-2" data-bs-toggle="collapse" data-bs-target="#mobileSearch">
+                        <i class="fas fa-search fs-4"></i>
+                    </a>
+
+                    <!-- Wishlist Icon -->
+                    <a href="{% url 'view_wishlist' %}" class="nav-link me-2 position-relative">
+                        <i class="far fa-heart fs-4"></i>
+                    </a>
+
+                    <!-- Cart Icon -->
+                    <a href="{% url 'crtpage' %}" class="nav-link position-relative me-3">
+                        <i class="fas fa-shopping-bag fs-4"></i>
+                        {% if cart_count %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ cart_count }}
+                        </span>
+                        {% endif %}
+                    </a>
+                    {% if request.user.is_authenticated %}
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> {{ request.user.first_name|default:request.user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'account' %}"><i class="fas fa-user me-2"></i> My Account</a></li>
+                            <li><a class="dropdown-item" href="{% url 'my_orders' %}"><i class="fas fa-box me-2"></i> My Orders</a></li>
+                            <li><a class="dropdown-item" href="{% url 'chngpass' %}"><i class="fas fa-key me-2"></i> Change Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logoutpage' %}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'loginpage' %}" class="btn btn-outline-glam me-2">Login</a>
+                    <a href="{% url 'regpage' %}" class="btn btn-glam">Join Now</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Search Collapse -->
+        <div class="collapse d-lg-none" id="mobileSearch">
+            <div class="container py-2">
+                <form action="{% url 'search' %}" method="GET">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control rounded-pill-start" placeholder="Search products...">
+                        <button class="btn btn-glam rounded-pill-end" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+    
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            {% if 'success' not in message.tags %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <script>
+        function showPinkBurst(title, text) {
+            // SweetAlert2 Popup
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: 'success',
+                showConfirmButton: true,
+                confirmButtonText: 'Fabulous!',
+                customClass: {
+                    popup: 'glam-swal-popup',
+                    title: 'glam-swal-title',
+                    confirmButton: 'glam-swal-confirm'
+                },
+                buttonsStyling: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+
+            // Confetti Burst
+            var count = 200;
+            var defaults = {
+                origin: { y: 0.7 },
+                colors: ['#ff4d6d', '#ff758f', '#ff8fa3', '#ffb3c6', '#ffccd5']
+            };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, {
+                spread: 26,
+                startVelocity: 55,
+            });
+            fire(0.2, {
+                spread: 60,
+            });
+            fire(0.35, {
+                spread: 100,
+                decay: 0.91,
+                scalar: 0.8
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 25,
+                decay: 0.92,
+                scalar: 1.2
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 45,
+            });
+        }
+
+        // Handle Django Messages
+        document.addEventListener('DOMContentLoaded', function() {
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'success' in message.tags %}
+                        showPinkBurst('Success!', '{{ message|escapejs }}');
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+

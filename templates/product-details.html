@@ -1,0 +1,180 @@
+{% include 'header.html' %}
+{% load static %}
+
+<style>
+    .product-detail-img {
+        max-height: 600px;
+        object-fit: cover;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .price-tag {
+        font-size: 2rem;
+        color: #ff4d6d;
+        font-weight: 700;
+    }
+    .badge-category {
+        background-color: #fff0f3;
+        color: #ff4d6d;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+    .btn-glam-lg {
+        background-color: #ff4d6d;
+        color: white;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        border: none;
+    }
+    .btn-glam-lg:hover {
+        background-color: #c9184a;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        color: white;
+    }
+    .related-product-card {
+        border: none;
+        transition: all 0.3s;
+        border-radius: 15px;
+    }
+    .related-product-card:hover {
+        transform: translateY(-5px);
+    }
+    .related-img {
+        height: 200px;
+        object-fit: cover;
+        border-radius: 15px 15px 0 0;
+    }
+</style>
+
+<div class="container my-5 py-5">
+    <div class="row g-5">
+        <!-- Product Image -->
+        <div class="col-md-6">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="img-fluid product-detail-img w-100" alt="{{ product.name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/600x600?text=Product+Image" class="img-fluid product-detail-img w-100" alt="{{ product.name }}">
+            {% endif %}
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'hmpage' %}" class="text-decoration-none text-muted">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'shoppage' %}" class="text-decoration-none text-muted">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+                </ol>
+            </nav>
+
+            <span class="badge-category">{{ product.category.cat_name }}</span>
+            <div class="mb-3">
+                {% if product.is_bestseller %}
+                <span class="badge badge-bestseller p-2 rounded-pill small me-2" style="background: linear-gradient(45deg, #ff4d6d, #ffb3c6); color: white;">Bestseller</span>
+                {% endif %}
+                {% if product.is_new %}
+                <span class="badge badge-new p-2 rounded-pill small me-2" style="background: linear-gradient(45deg, #00b4d8, #90e0ef); color: white;">New at GlamHub</span>
+                {% endif %}
+                {% if product.is_pricedrop %}
+                <span class="badge badge-pricedrop p-2 rounded-pill small me-2" style="background: linear-gradient(45deg, #ff4d4d, #ff8c66); color: white;">Price Drop</span>
+                {% endif %}
+                {% if product.is_top_rated %}
+                <span class="badge badge-top-rated p-2 rounded-pill small me-2" style="background: linear-gradient(45deg, #ff9f1c, #ffbf69); color: #2b2d42;"><i class="fas fa-star me-1"></i>Top Rated</span>
+                {% endif %}
+                {% if product.is_most_gifted %}
+                <span class="badge badge-gifted p-2 rounded-pill small me-2" style="background: linear-gradient(45deg, #7b2cbf, #9d4edd); color: white;">Most Gifted</span>
+                {% endif %}
+            </div>
+            <h1 class="display-4 fw-bold mb-3">{{ product.name }}</h1>
+            
+            <div class="d-flex align-items-center mb-4">
+                <div class="text-warning me-2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="text-muted">(4.5/5 based on 120 reviews)</span>
+            </div>
+
+            <p class="price-tag mb-4">₹{{ product.price }}</p>
+            
+            <div class="mb-5">
+                <h5 class="fw-bold mb-3">Description</h5>
+                <p class="text-muted lh-lg">
+                    {{ product.description|linebreaks }}
+                </p>
+            </div>
+
+            <div class="d-grid d-md-flex gap-3 mb-5">
+                <a href="{% url 'addtocart' product.id %}" class="btn btn-ombre-glam btn-lg px-5 py-3">
+                    <i class="fas fa-shopping-bag me-2"></i> Add to Bag
+                </a>
+                <a href="{% url 'add_to_wishlist' product.id %}?next={{ request.path }}" class="btn btn-outline-secondary rounded-pill px-4 d-flex align-items-center justify-content-center">
+                    <i class="far fa-heart"></i>
+                </a>
+            </div>
+
+            <div class="border-top pt-4">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <i class="fas fa-truck text-muted mb-2"></i>
+                        <p class="small mb-0">Fast Delivery</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="fas fa-undo text-muted mb-2"></i>
+                        <p class="small mb-0">Easy Returns</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="fas fa-shield-alt text-muted mb-2"></i>
+                        <p class="small mb-0">Secure Payment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Related Products -->
+<div class="bg-light py-5 mt-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">You May Also Like</h2>
+            <div class="mx-auto bg-pink" style="height: 3px; width: 60px; background-color: #ff4d6d;"></div>
+        </div>
+        
+        <div class="row g-4">
+            {% for rel in related_products %}
+            <div class="col-md-3">
+                <div class="card related-product-card h-100 shadow-sm">
+                    <a href="{% url 'product_detail' rel.id %}" class="text-decoration-none">
+                        {% if rel.image %}
+                        <img src="{{ rel.image.url }}" class="card-img-top related-img" alt="{{ rel.name }}">
+                        {% else %}
+                        <img src="https://via.placeholder.com/300x300?text=Product" class="card-img-top related-img" alt="{{ rel.name }}">
+                        {% endif %}
+                    </a>
+                    <div class="card-body text-center">
+                        <h6 class="fw-bold mb-1"><a href="{% url 'product_detail' rel.id %}" class="text-decoration-none text-dark">{{ rel.name }}</a></h6>
+                        <p class="text-glam-pink fw-bold mb-0">₹{{ rel.price }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No related products found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}

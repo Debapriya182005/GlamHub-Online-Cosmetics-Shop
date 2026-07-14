@@ -1,0 +1,13 @@
+{% include 'header.html' %}
+<div class="container my-5 py-5 text-center">
+    <div class="mb-4">
+        <i class="fas fa-check-circle fa-5x text-success"></i>
+    </div>
+    <h1 class="display-4 fw-bold">Order Confirmed!</h1>
+    <p class="lead mb-5">Thank you for your purchase. Your beauty essentials are on their way!</p>
+    <div class="d-flex justify-content-center gap-3">
+        <a href="{% url 'my_orders' %}" class="btn btn-glam btn-lg px-4">View My Orders</a>
+        <a href="{% url 'shoppage' %}" class="btn btn-outline-glam btn-lg px-4">Continue Shopping</a>
+    </div>
+</div>
+{% include 'footer.html' %}

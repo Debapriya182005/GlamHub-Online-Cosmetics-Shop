@@ -1,0 +1,70 @@
+{% include 'header.html' %}
+{% load static %}
+
+<div class="bg-light py-4 mb-5">
+    <div class="container">
+        <h1 class="fw-bold mb-0">My Wishlist</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'hmpage' %}" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active">Wishlist</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container my-5">
+    {% if wishlist_items %}
+    <div class="row g-4">
+        {% for item in wishlist_items %}
+        <div class="col-md-3">
+            <div class="card product-card h-100 position-relative">
+                {% if item.product.is_bestseller %}
+                <span class="glam-badge badge-bestseller">Bestseller</span>
+                {% elif item.product.is_new %}
+                <span class="glam-badge badge-new">New</span>
+                {% elif item.product.is_pricedrop %}
+                <span class="glam-badge badge-pricedrop">Price Drop</span>
+                {% elif item.product.is_top_rated %}
+                <span class="glam-badge badge-top-rated"><i class="fas fa-star me-1"></i>Top Rated</span>
+                {% endif %}
+                
+                {% if item.product.is_gifted %}
+                <span class="glam-badge badge-gifted">Most Gifted</span>
+                {% endif %}
+                {% if item.product.is_bogo %}
+                <span class="glam-badge badge-bogo">BOGO</span>
+                {% endif %}
+                <a href="{% url 'remove_from_wishlist' item.id %}" class="btn btn-sm btn-light rounded-circle shadow-sm position-absolute top-0 end-0 m-3 z-3 text-danger" title="Remove from Wishlist">
+                    <i class="fas fa-times"></i>
+                </a>
+                <a href="{% url 'product_detail' item.product.id %}" class="text-decoration-none">
+                    {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" class="card-img-top product-img" alt="{{ item.product.name }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/300x300?text=Product" class="card-img-top product-img" alt="{{ item.product.name }}">
+                    {% endif %}
+                </a>
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-1"><a href="{% url 'product_detail' item.product.id %}" class="text-decoration-none text-dark">{{ item.product.name }}</a></h5>
+                    <p class="text-muted small mb-2">{{ item.product.category.cat_name }}</p>
+                    <p class="fw-bold fs-5 mb-3">₹{{ item.product.price }}</p>
+                    <a href="{% url 'addtocart' item.product.id %}" class="btn btn-ombre-glam w-100">Add to Bag</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="far fa-heart fa-4x text-muted opacity-25"></i>
+        </div>
+        <h3>Your wishlist is empty</h3>
+        <p class="text-muted mb-4">Save your favorite beauty products to see them here.</p>
+        <a href="{% url 'shoppage' %}" class="btn btn-glam btn-lg px-5">Explore Shop</a>
+    </div>
+    {% endif %}
+</div>
+
+{% include 'footer.html' %}
