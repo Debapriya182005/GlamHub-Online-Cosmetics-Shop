@@ -11,7 +11,6 @@
   <img src="https://img.shields.io/badge/Django-5.1-green?style=for-the-badge&logo=django&logoColor=white"/>
   <img src="https://img.shields.io/badge/SQLite-Database-lightblue?style=for-the-badge&logo=sqlite&logoColor=white"/>
   <img src="https://img.shields.io/badge/Razorpay-Payment-blue?style=for-the-badge&logo=razorpay&logoColor=white"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge"/>
 </p>
 
 ---
@@ -176,12 +175,6 @@ RAZORPAY_API_SECRET = 'your_razorpay_secret_here'
 
 **Debapriya Mukherjee**
 - GitHub: [@Debapriya182005](https://github.com/Debapriya182005)
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — feel free to use it for learning and personal projects.
 
 ---
 
